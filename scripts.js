@@ -26,10 +26,14 @@ $(document).ready(function () {
 	function query() {
 		const url = 'https://smileschool-api.hbtn.info/quotes';
 
+		$('.loader').show();
+
 		$.ajax({
 			url: url,
 			dataType: 'json',
 			success: function (response) {
+				$('.loader').hide();
+
 				response.forEach(function (quote) {
 					addNewArticle(quote);
 				});
@@ -39,28 +43,29 @@ $(document).ready(function () {
 			},
 			error: function () {
 				alert("Server Error");
+				$('.loader').hide();
 			}
 		});
 	}
 
-	$(document).on('click', '.carousel-control-prev, .carousel-control-next', function () {
-		const slides = $('.carousel-item');
-		const slideActive = $('.carousel-item.active');
+	// $(document).on('click', '.carousel-control-prev, .carousel-control-next', function () {
+	// 	const slides = $('.carousel-item');
+	// 	const slideActive = $('.carousel-item.active');
 
-		//Détermine la direction de la navigation (suivant ou précédent) basée sur le bouton cliqué.
-		const calcNextSlide = $(this).hasClass('carousel-control-next') ? 1 : -1;
+	// 	//Détermine la direction de la navigation (suivant ou précédent) basée sur le bouton cliqué.
+	// 	const calcNextSlide = $(this).hasClass('carousel-control-next') ? 1 : -1;
 
-		//Calcule l'index de la nouvelle diapositive à activer.
-		let newIndex = calcNextSlide + slides.index(slideActive);
+	// 	//Calcule l'index de la nouvelle diapositive à activer.
+	// 	let newIndex = calcNextSlide + slides.index(slideActive);
 
-		//Gère les cas où la nouvelle index dépasse les limites du tableau de diapositives, créant ainsi une boucle infinie.
-		if (newIndex < 0) newIndex = slides.length - 1;
-		if (newIndex >= slides.length) newIndex = 0;
+	// 	//Gère les cas où la nouvelle index dépasse les limites du tableau de diapositives, créant ainsi une boucle infinie.
+	// 	if (newIndex < 0) newIndex = slides.length - 1;
+	// 	if (newIndex >= slides.length) newIndex = 0;
 
-		//Met à jour les classes pour rendre la nouvelle diapositive active et désactiver l'ancienne.
-		slideActive.removeClass('active');
-		slides.eq(newIndex).addClass('active');
-	});
+	// 	//Met à jour les classes pour rendre la nouvelle diapositive active et désactiver l'ancienne.
+	// 	slideActive.removeClass('active');
+	// 	slides.eq(newIndex).addClass('active');
+	// });
 
 	query();
 });
