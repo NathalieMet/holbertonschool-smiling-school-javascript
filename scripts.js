@@ -1,5 +1,5 @@
 $(document).ready(function () {
-	function addNewArticle(data) {
+	function addNewArticle1(data) {
 		const p = $('<p></p>').text(`« ${data.text}`).addClass('text-white');
 		const span = $('<span></span>').text(data.title).addClass('text-white');
 		const h = $('<h4></h4>').text(data.name).addClass('text-white font-weight-bold');
@@ -18,54 +18,96 @@ $(document).ready(function () {
 		row.append(colImg).append(colText);
 		carouselItem.append(row);
 
-		$('.carousel-inner').append(carouselItem);
-
-
+		$('#carousel-quotes').append(carouselItem);
 	}
 
-	function query() {
-		const url = 'https://smileschool-api.hbtn.info/quotes';
+	function addNewArticle2(data, index) {
+		const p = $('<p></p>').text(data['sub-title']).addClass('card-text text-muted');
+		const span = $('<span></span>').text(data.duration).addClass('main-color');
+		const h5 = $('<h5></h5>').text(data.title).addClass('card-title font-weight-bold');
+		const thumbnail = $('<img></img>').attr('src', data.thumb_url).addClass('card-img-top').attr('alt', 'Video thumbnail');
+		const play = $('<img></img>').attr('src', "images/play.png").addClass('align-self-center play-overlay').attr('alt', 'Play').attr('width', '64px');
+		const creator_img = $('<img></img>').attr('src', data.author_pic_url).addClass('rounded-circle').attr('alt', "Creator of Video").attr('width', '30px');
+		const h6 = $('<h6></h6>').text(data.author).addClass('pl-3 m-0 main-color');
+		const stars = data.star;
+		const rating = $('<div class="rating"></div>');
 
-		$('.loader').show();
+		for (let i = 0; i < stars; i++) {
+			rating.append($('<img></img>').attr('src', "images/star_on.png").attr('alt', "star on").attr('width', '15px'));
+		}
+
+		const col = $('<div class="col-12 col-sm-6 col-md-4 col-lg-3"></div>');
+		const card = $('<div class="card"></div>');
+		const card_body = $('<div class="card-body"></div>');
+		const creator = $('<div class="creator d-flex align-items-center"></div>');
+		const info = $('<div class="info pt-3 d-flex justify-content-between"></div>');
+		const card_play = $('<div class="card-img-overlay text-center"></div>');
+
+		card_play.append(play);
+		info.append(rating).append(span);
+		creator.append(creator_img).append(h6);
+		card_body.append(h5).append(p).append(creator).append(info);
+		card.append(thumbnail).append(card_play).append(card_body);
+		col.append(card);
+
+		$('#carousel-popular').append(col);
+	}
+
+	function slick_carousel() {
+		$('#carousel-popular').slick({
+			slidesToShow: 4,
+			slidesToScroll: 1,
+			infinite: true,
+			arrows: true,
+			prevArrow: '<a class="slick-prev"><img src="images/arrow_black_left.png" alt="Previous" aria-hidden="true" /></a>',
+			nextArrow: '<a class="slick-next"><img src="images/arrow_black_right.png" alt="Next" aria-hidden="true" /></a>',
+			responsive: [
+
+				{
+					breakpoint: 992,
+					settings: {
+						slidesToShow: 2,
+						slidesToScroll: 1
+					}
+				},
+				{
+					breakpoint: 576,
+					settings: {
+						slidesToShow: 1,
+						slidesToScroll: 1
+					}
+				}
+			]
+		});
+	}
+
+	function query(url, addArticleFunction, loaderSelector, carouselSelector) {
+		$(loaderSelector).show();
 
 		$.ajax({
 			url: url,
 			dataType: 'json',
 			success: function (response) {
-				$('.loader').hide();
+				$(loaderSelector).hide();
 
-				response.forEach(function (quote) {
-					addNewArticle(quote);
+				response.forEach(function (quote, index) {
+					addArticleFunction(quote, index);
 				});
 
-				$('.carousel-item').first().addClass('active');
+				if (carouselSelector === '#carousel-popular') {
+					slick_carousel();
+				} else if (carouselSelector === '#carousel-quotes') {
+					$(`${carouselSelector} .carousel-item`).first().addClass('active');
+				}
 
 			},
 			error: function () {
 				alert("Server Error");
-				$('.loader').hide();
+				$(loaderSelector).hide();
 			}
 		});
 	}
 
-	// $(document).on('click', '.carousel-control-prev, .carousel-control-next', function () {
-	// 	const slides = $('.carousel-item');
-	// 	const slideActive = $('.carousel-item.active');
-
-	// 	//Détermine la direction de la navigation (suivant ou précédent) basée sur le bouton cliqué.
-	// 	const calcNextSlide = $(this).hasClass('carousel-control-next') ? 1 : -1;
-
-	// 	//Calcule l'index de la nouvelle diapositive à activer.
-	// 	let newIndex = calcNextSlide + slides.index(slideActive);
-
-	// 	//Gère les cas où la nouvelle index dépasse les limites du tableau de diapositives, créant ainsi une boucle infinie.
-	// 	if (newIndex < 0) newIndex = slides.length - 1;
-	// 	if (newIndex >= slides.length) newIndex = 0;
-
-	// 	//Met à jour les classes pour rendre la nouvelle diapositive active et désactiver l'ancienne.
-	// 	slideActive.removeClass('active');
-	// 	slides.eq(newIndex).addClass('active');
-	// });
-
-	query();
+	query('https://smileschool-api.hbtn.info/quotes', addNewArticle1, '.loader1', '#carousel-quotes');
+	query('https://smileschool-api.hbtn.info/popular-tutorials', addNewArticle2, '.loader2', '#carousel-popular');
 });

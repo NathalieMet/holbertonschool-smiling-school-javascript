@@ -915,3 +915,40 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+#carousel-popular .slick-slide img {
+  display: inline !important;
+}
+
+#carousel-popular .slick-prev, #carousel-popular .slick-next {
+  font-size: 0;
+  line-height: 0;
+  position: absolute;
+  top: 50%;
+
+
+  transition: opacity .15s ease;
+  padding: 0;
+  transform: translate(0, -50%);
+  cursor: pointer;
+  color: transparent;
+  border: none;
+  outline: 0;
+  z-index: 1;
+}
+
+#carousel-popular .slick-prev img, #carousel-popular .slick-next img {
+
+  height: auto;
+  opacity: .5;
+  width: 30px;
+}
+
+.slick-slide {
+  padding: 0 !important;
+
+}
+
+
+
+
