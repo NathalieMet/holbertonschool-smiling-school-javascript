@@ -59,6 +59,8 @@ $(document).ready(function () {
 			slidesToScroll: 1,
 			infinite: true,
 			arrows: true,
+			centerMode: true,
+            centerPadding: '0',
 			prevArrow: '<a class="slick-prev"><img src="images/arrow_black_left.png" alt="Previous" aria-hidden="true" /></a>',
 			nextArrow: '<a class="slick-next"><img src="images/arrow_black_right.png" alt="Next" aria-hidden="true" /></a>',
 			responsive: [
