@@ -1,5 +1,5 @@
 $(document).ready(function () {
-	function addNewArticle1(data) {
+	function addNewArticle1(data, carousel) {
 		const p = $('<p></p>').text(`« ${data.text}`).addClass('text-white');
 		const span = $('<span></span>').text(data.title).addClass('text-white');
 		const h = $('<h4></h4>').text(data.name).addClass('text-white font-weight-bold');
@@ -18,10 +18,10 @@ $(document).ready(function () {
 		row.append(colImg).append(colText);
 		carouselItem.append(row);
 
-		$('#carousel-quotes').append(carouselItem);
+		$(carousel).append(carouselItem);
 	}
 
-	function addNewArticle2(data, index) {
+	function addNewArticle2(data, carousel) {
 		const p = $('<p></p>').text(data['sub-title']).addClass('card-text text-muted');
 		const span = $('<span></span>').text(data.duration).addClass('main-color');
 		const h5 = $('<h5></h5>').text(data.title).addClass('card-title font-weight-bold');
@@ -50,19 +50,21 @@ $(document).ready(function () {
 		card.append(thumbnail).append(card_play).append(card_body);
 		col.append(card);
 
-		$('#carousel-popular').append(col);
+		$(carousel).append(col);
 	}
 
-	function slick_carousel() {
-		$('#carousel-popular').slick({
+	function slick_carousel(carousel) {
+		$(carousel).slick({
 			slidesToShow: 4,
 			slidesToScroll: 1,
 			infinite: true,
 			arrows: true,
 			centerMode: true,
-            centerPadding: '0',
+			centerPadding: '0',
 			prevArrow: '<a class="slick-prev"><img src="images/arrow_black_left.png" alt="Previous" aria-hidden="true" /></a>',
 			nextArrow: '<a class="slick-next"><img src="images/arrow_black_right.png" alt="Next" aria-hidden="true" /></a>',
+			autoplay: true,
+			autoplaySpeed: 4000,
 			responsive: [
 
 				{
@@ -92,12 +94,12 @@ $(document).ready(function () {
 			success: function (response) {
 				$(loaderSelector).hide();
 
-				response.forEach(function (quote, index) {
-					addArticleFunction(quote, index);
+				response.forEach(function (quote) {
+					addArticleFunction(quote, carouselSelector);
 				});
 
-				if (carouselSelector === '#carousel-popular') {
-					slick_carousel();
+				if (carouselSelector === '#carousel-popular' || carouselSelector === '#carousel-latest') {
+					slick_carousel(carouselSelector);
 				} else if (carouselSelector === '#carousel-quotes') {
 					$(`${carouselSelector} .carousel-item`).first().addClass('active');
 				}
@@ -112,4 +114,5 @@ $(document).ready(function () {
 
 	query('https://smileschool-api.hbtn.info/quotes', addNewArticle1, '.loader1', '#carousel-quotes');
 	query('https://smileschool-api.hbtn.info/popular-tutorials', addNewArticle2, '.loader2', '#carousel-popular');
+	query('https://smileschool-api.hbtn.info/latest-videos', addNewArticle2, '.loader3', '#carousel-latest');
 });

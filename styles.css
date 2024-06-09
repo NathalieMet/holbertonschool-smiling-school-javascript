@@ -916,11 +916,11 @@
   100% { transform: rotate(360deg); }
 }
 
-#carousel-popular .slick-slide img {
+[id^="carousel"] .slick-slide img {
   display: inline !important;
 }
 
-#carousel-popular .slick-prev, #carousel-popular .slick-next {
+[id^="carousel"] .slick-prev, [id^="carousel"] .slick-next {
   font-size: 0;
   line-height: 0;
   position: absolute;
@@ -939,7 +939,7 @@
   margin-right: 20px;
 }
 
-#carousel-popular .slick-prev img, #carousel-popular .slick-next img {
+[id^="carousel"] .slick-prev img, [id^="carousel"] .slick-next img {
 
   height: auto;
   opacity: .5;
@@ -953,7 +953,7 @@
 
 }
 
-#carousel-popular .card {
+[id^="carousel"] .card {
   padding-right: 15px !important;
   padding-left: 15px !important;
   margin-left: auto;
