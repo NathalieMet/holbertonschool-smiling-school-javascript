@@ -112,7 +112,68 @@ $(document).ready(function () {
 		});
 	}
 
+	function fetchCourses(searchValue, topic, sort) {
+		$('.loader4').show();
+		$('#courses_result').empty();
+        $('.video-count').text('');
+
+		$.ajax({
+			url: 'https://smileschool-api.hbtn.info/courses',
+			data: {
+                q: searchValue,
+                topic: topic,
+                sort: sort
+            },
+
+			success: function (response) {
+				$('.loader4').hide();
+				const courses = response.courses;
+                const videoCount = courses.length;
+
+				courses.forEach(course => {
+                    addNewArticle2(course, '#courses_result');
+                });
+
+				$('.video-count').text(`${videoCount} videos`);
+			},
+			error: function () {
+				alert("Server Error");
+				$('.loader4').hide();
+			}
+		});
+	}
+
+    // Event listeners
+
+	$(".search-text-area").on('input', function () {
+        const searchValue = $(this).val();
+        const topic = $('#dropdownMenuLink-topic').text().trim();
+        const sort = $('#dropdownMenuLink-sort').text().trim();
+        fetchCourses(searchValue, topic, sort);
+    });
+
+    $(".dropdown-menu-topic a").on('click', function () {
+        const topic = $(this).text().trim();
+        $('#dropdownMenuLink-topic').text(topic);
+        const searchValue = $('.search-text-area').val();
+        const sort = $('#dropdownMenuLink-sort').text().trim();
+        fetchCourses(searchValue, topic, sort);
+    });
+
+    $(".dropdown-menu-sort a").on('click', function () {
+        const sort = $(this).text().trim();
+        $('#dropdownMenuLink-sort').text(sort);
+        const searchValue = $('.search-text-area').val();
+        const topic = $('#dropdownMenuLink-topic').text().trim();
+        fetchCourses(searchValue, topic, sort);
+    });
+
+    // Initialize
+    fetchCourses('', '', '');
+
 	query('https://smileschool-api.hbtn.info/quotes', addNewArticle1, '.loader1', '#carousel-quotes');
 	query('https://smileschool-api.hbtn.info/popular-tutorials', addNewArticle2, '.loader2', '#carousel-popular');
 	query('https://smileschool-api.hbtn.info/latest-videos', addNewArticle2, '.loader3', '#carousel-latest');
+
+
 });
